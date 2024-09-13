@@ -79,13 +79,18 @@ export interface GroupedNodes {
     };
 }
 
-// Plugin Settings
+// Updated Plugin Settings
 export interface OpenCanvasSettings {
     defaultNodeColor: CanvasColor;
     defaultEdgeColor: CanvasColor;
     enableAutoGrouping: boolean;
-    linkFiltersPath: string;
-    linkFilters: Record<string, string>;
+    linkFilters: LinkFilter[];
+}
+
+// New interface for link filters
+export interface LinkFilter {
+    title: string;
+    url: string;
 }
 
 // Canvas Color Type

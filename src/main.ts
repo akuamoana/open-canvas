@@ -1,4 +1,4 @@
-import { Plugin, TAbstractFile, TFile, WorkspaceLeaf, View } from 'obsidian';
+import { Plugin, TAbstractFile, TFile, WorkspaceLeaf, View, App, PluginSettingTab, Setting } from 'obsidian';
 import { PluginView, VIEW_TYPE_OPEN_CANVAS } from './views/PluginView';
 import { CanvasManager } from './managers/CanvasManager';
 import { NodeManager } from './managers/NodeManager';
@@ -111,11 +111,8 @@ const DEFAULT_SETTINGS: Partial<OpenCanvasSettings> = {
     defaultNodeColor: '1',
     defaultEdgeColor: '1',
     enableAutoGrouping: true,
-    linkFiltersPath: 'data/link-filters.json',
-    linkFilters: {}
+    linkFilters: []
 };
-
-import { App, PluginSettingTab, Setting } from 'obsidian';
 
 class OpenCanvasSettingTab extends PluginSettingTab {
     plugin: OpenCanvas;
@@ -158,15 +155,44 @@ class OpenCanvasSettingTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                 }));
 
-        new Setting(containerEl)
-            .setName('Link Filters Path')
-            .setDesc('Path to the link filters JSON file')
-            .addText(text => text
-                .setPlaceholder('data/link-filters.json')
-                .setValue(this.plugin.settings.linkFiltersPath)
-                .onChange(async (value) => {
-                    this.plugin.settings.linkFiltersPath = value;
-                    await this.plugin.saveSettings();
-                }));
+                new Setting(containerEl)
+                .setName('Link Filters')
+                .setDesc('Add, remove, or edit link filters')
+                .addButton(button => button
+                    .setButtonText('Add New Filter')
+                    .onClick(() => {
+                        if (!Array.isArray(this.plugin.settings.linkFilters)) {
+                            this.plugin.settings.linkFilters = [];
+                        }
+                        this.plugin.settingsManager.addLinkFilter('New_Filter', 'https://example.com');
+                        this.display();
+                    }));
+    
+            if (Array.isArray(this.plugin.settings.linkFilters) && this.plugin.settings.linkFilters.length > 0) {
+                this.plugin.settings.linkFilters.forEach((filter, index) => {
+                    const filterSetting = new Setting(containerEl)
+                        .addText(text => text
+                            .setPlaceholder('Filter Title')
+                            .setValue(filter.title)
+                            .onChange(async (value) => {
+                                this.plugin.settingsManager.updateLinkFilter(index, value, filter.url);
+                            }))
+                        .addText(text => text
+                            .setPlaceholder('URL')
+                            .setValue(filter.url)
+                            .onChange(async (value) => {
+                                this.plugin.settingsManager.updateLinkFilter(index, filter.title, value);
+                            }))
+                        .addButton(button => button
+                            .setButtonText('Remove')
+                            .onClick(() => {
+                                this.plugin.settingsManager.removeLinkFilter(index);
+                                this.display();
+                            }));
+                });
+            } else {
+                new Setting(containerEl)
+                    .setDesc('No link filters added yet. Click "Add New Filter" to create one.');
+            }
+        }
     }
-}

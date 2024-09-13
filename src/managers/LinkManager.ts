@@ -14,36 +14,20 @@ export class LinkManager {
     categorizeLink(linkGroup: GroupedNodes['link'], node: StructuredNode) {
         if (node.content && typeof node.content === 'object' && 'url' in node.content) {
             const url = node.content.url;
-            const matchedFilter = Object.entries(this.plugin.settings.linkFilters).find(([_, filterUrl]) => url.includes(filterUrl));
+            const linkFilters = Array.isArray(this.plugin.settings.linkFilters) ? this.plugin.settings.linkFilters : [];
+            const matchedFilter = linkFilters.find(filter => url.includes(filter.url));
             
             if (matchedFilter) {
-                const [filterName] = matchedFilter;
-                if (!linkGroup[filterName]) {
-                    linkGroup[filterName] = [];
+                if (!linkGroup[matchedFilter.title]) {
+                    linkGroup[matchedFilter.title] = [];
                 }
-                linkGroup[filterName].push(node);
+                linkGroup[matchedFilter.title].push(node);
             } else {
                 linkGroup.other.push(node);
             }
         } else {
             linkGroup.other.push(node);
         }
-    }
-
-    async loadLinkFilters() {
-        console.log("Test link filters")
-        try {
-            const configPath = this.plugin.settings.linkFiltersPath;
-            console.log(configPath);
-            const configContent = await this.app.vault.adapter.read(configPath);
-            const config = JSON.parse(configContent);
-            this.plugin.settings.linkFilters = config.linkFilters || {};
-            await this.plugin.settingsManager.saveSettings();
-        } catch (error) {
-            console.error('Error loading link filters:', error);
-            this.plugin.settings.linkFilters = {};
-        }
-        console.log('Link Filters:', this.plugin.settings.linkFilters);
     }
 
     getLinkColor(node: StructuredNode): string {

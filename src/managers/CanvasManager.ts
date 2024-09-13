@@ -25,6 +25,8 @@ export class CanvasManager {
             if (canvasFile) {
                 console.log(`Active canvas set to: ${canvasFile.path}`);
                 const groupedNodes = await this.renderGroupedCanvasNodes(canvasFile);
+                
+                console.log("Bug tracking 002")
                 this.openOpenCanvasView(groupedNodes);
             } else {
                 console.log('No active canvas');
@@ -62,6 +64,7 @@ export class CanvasManager {
                         (groupedNodes[node.type] as StructuredNode[]).push(structuredNode);
                         break;
                     case 'link':
+                        console.log("Bug tracking 001")
                         this.plugin.linkManager.categorizeLink(groupedNodes.link, structuredNode);
                         break;
                     default:
