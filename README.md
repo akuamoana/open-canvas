@@ -1,14 +1,15 @@
 # OpenCanvas for Obsidian
 
-OpenCanvas is a plugin for Obsidian that enhances the Canvas feature with custom node rendering and improved multi-canvas management.
+OpenCanvas is a plugin for Obsidian that enhances the Canvas feature with custom node rendering, improved multi-canvas management, and a grouped view of canvas elements.
 
 ## Features
 
 - Efficient handling of multiple open canvases
-- Custom UI rendering for specific node types
+- Custom node types with unique visualizations
 - Real-time tracking of active and background canvases
-- Easy-to-use API for extending canvas functionality
-- Create and manage custom node types with unique visualizations
+- Grouped view of canvas nodes by type (text, file, group, link)
+- Customizable link filtering and categorization
+- Seamless integration with Obsidian's existing canvas functionality
 
 ## Installation
 
@@ -19,35 +20,46 @@ OpenCanvas is a plugin for Obsidian that enhances the Canvas feature with custom
 
 ## Usage
 
-Once installed, OpenCanvas will automatically enhance your Canvas experience in Obsidian. You can:
+Once installed, OpenCanvas will automatically enhance your Canvas experience in Obsidian:
 
-- Open multiple canvases and switch between them seamlessly
-- Create custom node types with unique visualizations
-- Use the OpenCanvas API to extend functionality (for developers)
+### Viewing Grouped Nodes
 
-To create a custom node:
 1. Open a canvas in Obsidian
-2. Use the command palette (Ctrl/Cmd + P) and search for "Create Custom Node"
-3. The custom node will appear on your active canvas with default styling
+2. The OpenCanvas view will automatically open in the right sidebar
+3. Nodes are grouped by type: text, file, group, and link
+4. Link nodes are further categorized based on your link filters
+
+### Customizing Link Filters
+
+1. Go to the OpenCanvas settings in Obsidian
+2. Update the "Link Filters Path" to point to your custom JSON file
+3. Edit the JSON file to add or modify link filters
+4. Restart Obsidian or reload the plugin for changes to take effect
 
 ## Configuration
 
-Visit the OpenCanvas settings tab in Obsidian to configure:
+Visit the OpenCanvas settings tab in Obsidian to customize your experience:
 
-- Custom node types and their rendering options
-- Performance settings for multi-canvas management
+- Set default colors for nodes and edges
+- Enable or disable auto-grouping
+- Specify the path to your link filters JSON file
 
 ## For Developers
 
-OpenCanvas provides an API for creating custom node types and renderers. See the [DOCUMENTATION.md](DOCUMENTATION.md) file for details on how to use the API to extend the plugin's functionality.
+OpenCanvas provides a modular structure for extending canvas functionality. Key components include:
+
+- `main.ts`: The main plugin file
+- `PluginView.ts`: Defines the custom view for grouped nodes
+- `CanvasManager.ts`: Handles canvas-related operations
+- `NodeManager.ts`: Manages node-related functionality
+- `LinkManager.ts`: Handles link-specific operations
+- `SettingsManager.ts`: Manages plugin settings
+
+See the `DOCUMENTATION.md` file for details on the project structure and how to contribute.
 
 ## Contributing
 
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for details on how to get started.
-
-## Documentation
-
-For more detailed information about using and extending OpenCanvas, please see our [DOCUMENTATION.md](DOCUMENTATION.md) file.
+We welcome contributions! Please see our `CONTRIBUTING.md` file for details on how to get started.
 
 ## Support
 
@@ -55,4 +67,4 @@ If you encounter any issues or have questions, please file an issue on our [GitH
 
 ## License
 
-OpenCanvas is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
+OpenCanvas is released under the MIT License. See the `LICENSE` file for more details.

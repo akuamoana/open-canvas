@@ -6,7 +6,7 @@ export interface BaseNode {
     y: number;
     width: number;
     height: number;
-    color?: string;
+    color?: CanvasColor;
 }
 
 export interface TextNode extends BaseNode {
@@ -43,7 +43,7 @@ export interface CanvasEdge {
     toNode: string;
     toSide?: 'top' | 'right' | 'bottom' | 'left';
     toEnd?: 'none' | 'arrow';
-    color?: string;
+    color?: CanvasColor;
     label?: string;
 }
 
@@ -60,7 +60,7 @@ export interface StructuredNode {
     position: { x: number; y: number };
     size: { width: number; height: number };
     content?: string | { file: string; subpath?: string } | { url: string };
-    color?: string;
+    color?: CanvasColor;
     customData?: {
         label?: string;
         background?: string;
@@ -79,20 +79,14 @@ export interface GroupedNodes {
     };
 }
 
-// Link Filters Configuration
-export interface LinkFiltersConfig {
-    linkFilters: {
-        [key: string]: string;
-    };
-}
-
-// Canvas Color Type
-export type CanvasColor = string | '1' | '2' | '3' | '4' | '5' | '6';
-
 // Plugin Settings
 export interface OpenCanvasSettings {
     defaultNodeColor: CanvasColor;
     defaultEdgeColor: CanvasColor;
     enableAutoGrouping: boolean;
     linkFiltersPath: string;
+    linkFilters: Record<string, string>;
 }
+
+// Canvas Color Type
+export type CanvasColor = string | '1' | '2' | '3' | '4' | '5' | '6';
