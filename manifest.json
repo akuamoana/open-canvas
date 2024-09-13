@@ -1,8 +1,11 @@
 {
-	"id": "open-canvas",
-	"name": "Open Canvas",
-	"version": "0.0.0",
-	"description": "Improve Canvas.",
-	"author": "Ben U. Matthys",
-	"isDesktopOnly": true
+  "id": "open-canvas",
+  "name": "OpenCanvas",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Enhanced canvas functionality for Obsidian",
+  "author": "Your Name",
+  "authorUrl": "https://your-website.com",
+  "isDesktopOnly": false,
+  "main": "src/main.js"
 }
