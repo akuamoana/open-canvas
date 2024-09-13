@@ -116,7 +116,159 @@ Links are categorized based on user-defined filters in the link filters JSON fil
 The grouped nodes view updates automatically when:
 - A new canvas is opened
 - The active canvas is modified
+# OpenCanvas Documentation
 
+## Project Structure
+
+```
+open-canvas/
+├── manifest.json
+├── styles.css
+└── src/
+    ├── main.ts
+    ├── types.ts
+    ├── views/
+    │   └── PluginView.ts
+    ├── managers/
+    │   ├── CanvasManager.ts
+    │   ├── NodeManager.ts
+    │   ├── LinkManager.ts
+    │   └── SettingsManager.ts
+    └── data/
+        └── link-filters.json (deprecated)
+```
+
+## Core Components
+
+### OpenCanvas (main.ts)
+
+The main class that initializes the plugin and coordinates between different managers.
+
+Key methods:
+- `onload()`: Initializes the plugin
+- `loadSettings()`: Loads plugin settings
+- `initializeManagers()`: Sets up all manager classes
+- `registerViews()`: Registers the custom plugin view
+- `addCommands()`: Adds plugin commands
+- `addEventListeners()`: Sets up event listeners for canvas-related events
+
+### PluginView (views/PluginView.ts)
+
+A custom view that displays grouped canvas nodes.
+
+Key methods:
+- `onOpen()`: Sets up the view structure
+- `setGroupedNodes(groupedNodes: GroupedNodes)`: Updates the view with new grouped nodes
+- `renderGroupedNodes()`: Renders the grouped nodes in the view
+- `renderActions()`: Adds interactive elements to the view
+- `renderNode()`: Renders individual nodes, including file content for .txt and .ts files
+
+### CanvasManager (managers/CanvasManager.ts)
+
+Handles canvas-related operations.
+
+Key methods:
+- `handleCanvasOpen(file: TFile)`: Manages opening of a canvas file
+- `setActiveCanvas(canvasFile: TFile | null)`: Sets the active canvas
+- `renderGroupedCanvasNodes(file: TFile)`: Processes and groups canvas nodes asynchronously
+- `openOpenCanvasView(groupedNodes?: GroupedNodes)`: Opens or updates the plugin view
+
+### NodeManager (managers/NodeManager.ts)
+
+Manages node-related functionality.
+
+Key methods:
+- `createStructuredNode(node: CanvasNode)`: Converts a raw CanvasNode to a StructuredNode, including file content reading for .txt and .ts files
+- `getNodeColor(node: StructuredNode)`: Retrieves the color for a node
+- `readFileContent(node: FileNode)`: Reads the content of .txt and .ts files
+
+### LinkManager (managers/LinkManager.ts)
+
+Handles link-specific operations.
+
+Key methods:
+- `categorizeLink(linkGroup: GroupedNodes['link'], node: StructuredNode)`: Categorizes links based on user-defined filters
+- `getLinkColor(node: StructuredNode)`: Retrieves the color for a link
+
+### SettingsManager (managers/SettingsManager.ts)
+
+Manages plugin settings.
+
+Key methods:
+- `loadSettings()`: Loads settings from Obsidian's data storage
+- `saveSettings()`: Saves current settings to Obsidian's data storage
+- `addLinkFilter(title: string, url: string)`: Adds a new link filter
+- `removeLinkFilter(index: number)`: Removes a link filter
+- `updateLinkFilter(index: number, title: string, url: string)`: Updates an existing link filter
+
+## Types (types.ts)
+
+Defines TypeScript interfaces and types used throughout the project:
+- `CanvasNode`, `CanvasEdge`, `CanvasData`: Represent canvas elements
+- `StructuredNode`, `GroupedNodes`: Used for node grouping and rendering
+- `OpenCanvasSettings`: Defines the structure of plugin settings
+- `CanvasColor`: Represents the color options for nodes and edges
+- `LinkFilter`: Defines the structure for link filters
+
+## Key Features
+
+### Canvas Node Grouping
+
+Nodes are grouped into categories:
+- Text nodes
+- File nodes (including content reading for .txt and .ts files)
+- Group nodes
+- Link nodes (categorized by user-defined filters)
+
+### Link Filtering
+
+Links are categorized based on user-defined filters in the plugin settings:
+- Filters are defined as title-URL pairs
+- Links matching a filter are grouped under that filter's title
+- Non-matching links are grouped under "other"
+
+### File Content Reading
+
+The plugin now reads and displays the content of .txt and .ts file nodes:
+- File content is read asynchronously when processing canvas nodes
+- Content is displayed in a collapsible section in the OpenCanvas view
+
+### Real-time Updates
+
+The grouped nodes view updates automatically when:
+- A new canvas is opened
+- The active canvas is modified
+
+## Extending OpenCanvas
+
+To add new features or modify existing ones:
+
+1. Update relevant interfaces in `types.ts`
+2. Modify the appropriate manager class to implement new logic
+3. Update `PluginView.ts` to reflect changes in the UI
+4. If adding new settings, update `SettingsManager.ts` and the settings tab in `main.ts`
+
+## Building and Packaging
+
+1. Ensure you have Node.js and npm installed
+2. Run `npm install` to install dependencies
+3. Use `npm run build` to compile the plugin
+4. The compiled plugin will be in the `build` directory
+
+## Performance Considerations
+
+- OpenCanvas efficiently manages multiple canvases by updating only when necessary
+- Asynchronous processing of nodes ensures smooth performance even with large canvases
+- Consider optimizing file content reading for very large files or numerous file nodes
+
+## Future Improvements
+
+- Implement custom node types and renderers
+- Add more advanced filtering and sorting options for grouped nodes
+- Extend file content reading to support more file types
+- Implement actual logic for updating, deleting, and creating nodes and links
+
+For more detailed API documentation, please refer to the inline comments in each file.
 ## Extending OpenCanvas
 
 To add new features or modify existing ones:

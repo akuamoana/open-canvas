@@ -1,6 +1,6 @@
-import { App } from 'obsidian';
+import { App, TFile } from 'obsidian';
 import OpenCanvas from '../main';
-import { CanvasNode, StructuredNode, CanvasColor } from '../types';
+import { CanvasNode, StructuredNode, CanvasColor, FileNode } from '../types';
 
 export class NodeManager {
     private app: App;
@@ -11,7 +11,7 @@ export class NodeManager {
         this.plugin = plugin;
     }
 
-    createStructuredNode(node: CanvasNode): StructuredNode {
+    async createStructuredNode(node: CanvasNode): Promise<StructuredNode> {
         const structuredNode: StructuredNode = {
             id: node.id,
             type: node.type,
@@ -25,7 +25,12 @@ export class NodeManager {
                 structuredNode.content = node.text;
                 break;
             case 'file':
+                console.log("Found a file: ", this.shouldReadFileContent(node))
                 structuredNode.content = { file: node.file, subpath: node.subpath };
+                if (this.shouldReadFileContent(node)) {
+                    structuredNode.fileContent = await this.readFileContent(node);
+                    console.log("File content: ", structuredNode.fileContent)
+                }
                 break;
             case 'link':
                 structuredNode.content = { url: node.url };
@@ -40,6 +45,23 @@ export class NodeManager {
         }
 
         return structuredNode;
+    }
+
+    private shouldReadFileContent(node: FileNode): boolean {
+        const extension = node.file.split('.').pop()?.toLowerCase();
+        return extension === 'txt' || extension === 'ts';
+    }
+
+    private async readFileContent(node: FileNode): Promise<string | null> {
+        try {
+            const file = this.app.vault.getAbstractFileByPath(node.file);
+            if (file instanceof TFile) {
+                return await this.app.vault.read(file);
+            }
+        } catch (error) {
+            console.error(`Error reading file content for node ${node.id}:`, error);
+        }
+        return null;
     }
 
     getNodeColor(node: StructuredNode): string {

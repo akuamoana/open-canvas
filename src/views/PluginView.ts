@@ -86,6 +86,11 @@ export class PluginView extends ItemView {
                 contentEl.createEl('div', { text: node.content });
             } else if ('file' in node.content) {
                 contentEl.createEl('div', { text: `File: ${node.content.file}` });
+                if (node.fileContent) {
+                    const fileContentEl = contentEl.createEl('details', { cls: 'file-content' });
+                    fileContentEl.createEl('summary', { text: 'File Content' });
+                    fileContentEl.createEl('pre', { text: node.fileContent });
+                }
             } else if ('url' in node.content) {
                 const linkEl = contentEl.createEl('a', { text: node.content.url, href: node.content.url });
                 linkEl.setAttribute('target', '_blank');

@@ -25,8 +25,6 @@ export class CanvasManager {
             if (canvasFile) {
                 console.log(`Active canvas set to: ${canvasFile.path}`);
                 const groupedNodes = await this.renderGroupedCanvasNodes(canvasFile);
-                
-                console.log("Bug tracking 002")
                 this.openOpenCanvasView(groupedNodes);
             } else {
                 console.log('No active canvas');
@@ -54,8 +52,9 @@ export class CanvasManager {
                 }
             };
 
-            canvasData.nodes.forEach(node => {
-                const structuredNode = this.plugin.nodeManager.createStructuredNode(node);
+            // Use Promise.all to handle asynchronous node creation
+            await Promise.all(canvasData.nodes.map(async (node) => {
+                const structuredNode = await this.plugin.nodeManager.createStructuredNode(node);
 
                 switch (node.type) {
                     case 'text':
@@ -64,13 +63,12 @@ export class CanvasManager {
                         (groupedNodes[node.type] as StructuredNode[]).push(structuredNode);
                         break;
                     case 'link':
-                        console.log("Bug tracking 001")
                         this.plugin.linkManager.categorizeLink(groupedNodes.link, structuredNode);
                         break;
                     default:
-                        console.warn(`Unknown node type: ${(node as any).file}`);
+                        console.warn(`Unknown node type: ${(node as any).type}`);
                 }
-            });
+            }));
 
             return groupedNodes;
         } catch (error) {

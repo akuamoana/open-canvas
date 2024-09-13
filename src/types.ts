@@ -53,7 +53,7 @@ export interface CanvasData {
     edges: CanvasEdge[];
 }
 
-// Structured Node for Grouped View
+// Updated Structured Node for Grouped View
 export interface StructuredNode {
     id: string;
     type: string;
@@ -66,6 +66,7 @@ export interface StructuredNode {
         background?: string;
         backgroundStyle?: 'cover' | 'ratio' | 'repeat';
     };
+    fileContent?: string | null; // New property for file content
 }
 
 // Grouped Nodes Structure
