@@ -108,7 +108,7 @@ export default class OpenCanvas extends Plugin {
                         return;
                     }
         
-                    const basePath = "D:/01_Vaults/Nautilus/";
+                    const basePath = "D:/01_Vaults/Knowledge-Vault/";
                     const fullDirectoryPath = basePath + '/' + vaultPath + '/' + `${result}-DocDB`;
                     const vaultDirectoryPath = vaultPath + '/' + `${result}-DocDB`;
         
@@ -233,7 +233,7 @@ export default class OpenCanvas extends Plugin {
                                 {
                                     id: "a5f078fd4f52b14b",
                                     type: "text",
-                                    text: "# Weeks | `relation`",
+                                    text: "# Upstread_Database | `relation`",
                                     styleAttributes: {
                                         textAlign: "center"
                                     },
