@@ -5,6 +5,7 @@ import { CanvasNode, StructuredNode, CanvasColor, FileNode } from '../types';
 export class NodeManager {
     private app: App;
     private plugin: OpenCanvas;
+    private fileContents: Map<string, string> = new Map();
 
     constructor(app: App, plugin: OpenCanvas) {
         this.app = app;
@@ -21,16 +22,21 @@ export class NodeManager {
         };
 
         switch (node.type) {
+            case 'file':
+                if (this.shouldReadFileContent(node)) {
+                    const fileContent = await this.readFileContent(node);
+                    if (fileContent) {
+                        this.fileContents.set(node.id, fileContent);
+                        // Convert file node to a code block
+                        structuredNode.type = 'text';
+                        structuredNode.content = `\`\`\`file-content:${node.file}\n${fileContent}\n\`\`\``;
+                    }
+                } else {
+                    structuredNode.content = { file: node.file, subpath: node.subpath };
+                }
+                break;
             case 'text':
                 structuredNode.content = node.text;
-                break;
-            case 'file':
-                console.log("Found a file: ", this.shouldReadFileContent(node))
-                structuredNode.content = { file: node.file, subpath: node.subpath };
-                if (this.shouldReadFileContent(node)) {
-                    structuredNode.fileContent = await this.readFileContent(node);
-                    console.log("File content: ", structuredNode.fileContent)
-                }
                 break;
             case 'link':
                 structuredNode.content = { url: node.url };
@@ -52,7 +58,7 @@ export class NodeManager {
         return extension === 'txt' || extension === 'ts';
     }
 
-    private async readFileContent(node: FileNode): Promise<string | null> {
+    async readFileContent(node: FileNode): Promise<string | null> {
         try {
             const file = this.app.vault.getAbstractFileByPath(node.file);
             if (file instanceof TFile) {
@@ -62,6 +68,10 @@ export class NodeManager {
             console.error(`Error reading file content for node ${node.id}:`, error);
         }
         return null;
+    }
+
+    getFileContent(nodeId: string): string | undefined {
+        return this.fileContents.get(nodeId);
     }
 
     getNodeColor(node: StructuredNode): string {

@@ -6,3 +6,46 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.canvas-file-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.file-content-popup {
+    position: absolute;
+    background-color: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 8px;
+    max-width: 300px;
+    max-height: 200px;
+    overflow: auto;
+    display: none;
+    pointer-events: all;
+    z-index: 1001;
+}
+
+.file-content-popup pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+
+.file-path {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: none;
+}
+
+.file-content {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--background-secondary);
+    padding: 8px;
+    border-radius: 4px;
+}

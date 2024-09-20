@@ -1,7 +1,6 @@
 // Canvas Node Types
 export interface BaseNode {
     id: string;
-    type: string;
     x: number;
     y: number;
     width: number;
